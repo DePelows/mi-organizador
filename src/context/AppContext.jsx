@@ -1,6 +1,3 @@
-import { sonidoLogro, sonidoSubirNivel } from '../utils/sonidos'
-import { lanzarConfetiLogro, lanzarConfetiNivel } from '../utils/confeti'
-
 import {
   createContext,
   useContext,
@@ -9,6 +6,13 @@ import {
   useRef,
 } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage'
+import { sonidoLogro, sonidoSubirNivel } from '../utils/sonidos'
+import { lanzarConfetiLogro, lanzarConfetiNivel } from '../utils/confeti'
+import {
+  pedirPermisoNotificaciones,
+  notificarPomodoroTerminado,
+  tienePermiso,
+} from '../utils/notificaciones'
 
 const AppContext = createContext()
 
@@ -214,14 +218,6 @@ export function AppProvider({ children }) {
     'etiquetasPomodoro',
     []
   )
-    const [sonidosActivos, setSonidosActivos] = useLocalStorage(
-    'sonidosActivos',
-    true
-  )
-
-  const toggleSonidos = () => {
-    setSonidosActivos((s) => !s)
-  }
   const [habitos, setHabitos] = useLocalStorage('habitos', [])
   const [periodos, setPeriodos] = useLocalStorage('periodos', [])
   const [periodoActivoId, setPeriodoActivoId] = useLocalStorage(
@@ -241,6 +237,22 @@ export function AppProvider({ children }) {
   )
   const [diasUso, setDiasUso] = useLocalStorage('diasUso', [])
   const [tema, setTema] = useLocalStorage('tema', 'oscuro')
+  const [sonidosActivos, setSonidosActivos] = useLocalStorage(
+    'sonidosActivos',
+    true
+  )
+  const [notificacionesActivas, setNotificacionesActivas] = useLocalStorage(
+    'notificacionesActivas',
+    false
+  )
+  const [ultimaNotifHabitos, setUltimaNotifHabitos] = useLocalStorage(
+    'ultimaNotifHabitos',
+    null
+  )
+  const [ultimaNotifTareas, setUltimaNotifTareas] = useLocalStorage(
+    'ultimaNotifTareas',
+    null
+  )
 
   const [toasts, setToasts] = useState([])
   const nivelAnteriorRef = useRef(null)
@@ -365,6 +377,13 @@ export function AppProvider({ children }) {
       ])
     }
     darXP(25)
+  }
+
+  // 🔔 Notificar pomodoro terminado
+  const notificarPomodoro = (modo) => {
+    if (notificacionesActivas && tienePermiso()) {
+      notificarPomodoroTerminado(modo)
+    }
   }
 
   // === HÁBITOS ===
@@ -690,6 +709,48 @@ export function AppProvider({ children }) {
     setTema((t) => (t === 'oscuro' ? 'claro' : 'oscuro'))
   }
 
+  const toggleSonidos = () => {
+    setSonidosActivos((s) => !s)
+  }
+
+  // 🔔 Activar notificaciones
+  const activarNotificaciones = async () => {
+    const permiso = await pedirPermisoNotificaciones()
+    if (permiso) {
+      setNotificacionesActivas(true)
+      agregarToast({
+        tipo: 'nivel',
+        titulo: '🔔 Notificaciones activadas',
+        mensaje: 'Te avisaremos cuando importe',
+      })
+      return true
+    } else {
+      agregarToast({
+        tipo: 'logro',
+        titulo: '❌ Permiso denegado',
+        mensaje: 'Habilitalas desde el navegador',
+      })
+      return false
+    }
+  }
+
+  const desactivarNotificaciones = () => {
+    setNotificacionesActivas(false)
+    agregarToast({
+      tipo: 'logro',
+      titulo: '🔕 Notificaciones desactivadas',
+      mensaje: 'No te vamos a molestar más',
+    })
+  }
+
+  const toggleNotificaciones = async () => {
+    if (notificacionesActivas) {
+      desactivarNotificaciones()
+    } else {
+      await activarNotificaciones()
+    }
+  }
+
   // 🔥 Registrar día de uso
   useEffect(() => {
     const hoy = fechaHoy()
@@ -854,6 +915,7 @@ export function AppProvider({ children }) {
         pomodoros,
         sumarPomodoro,
         etiquetasPomodoro,
+        notificarPomodoro,
         // Hábitos
         habitos: habitosConStats,
         agregarHabito,
@@ -918,6 +980,13 @@ export function AppProvider({ children }) {
         // Sonidos
         sonidosActivos,
         toggleSonidos,
+        // Notificaciones
+        notificacionesActivas,
+        toggleNotificaciones,
+        ultimaNotifHabitos,
+        setUltimaNotifHabitos,
+        ultimaNotifTareas,
+        setUltimaNotifTareas,
       }}
     >
       {children}

@@ -14,8 +14,10 @@ function Config() {
     rutinas,
     entrenos,
     primerUso,
-    sonidosActivos,  // ← NUEVO
-    toggleSonidos,    // ← NUEVO
+    sonidosActivos,
+    toggleSonidos,
+    notificacionesActivas,
+    toggleNotificaciones,
   } = useApp()
 
   const fileInputRef = useRef(null)
@@ -83,15 +85,17 @@ function Config() {
           </div>
         </div>
       </div>
-      {/* Preferencias */}
+
+      {/* 🆕 Preferencias */}
       <div className="config-seccion">
-        <h3 className="config-seccion-titulo">⚙️ Preferencias</h3>
+        <h3 className="config-seccion-titulo">🎛️ Preferencias</h3>
 
         <div className="config-preferencia">
           <div className="config-pref-info">
             <span className="config-pref-titulo">🔊 Sonidos</span>
             <span className="config-pref-desc">
-              Sonidos al subir de nivel, desbloquear logros y completar pomodoros
+              Sonidos al subir de nivel, desbloquear logros y completar
+              pomodoros
             </span>
           </div>
           <button
@@ -101,7 +105,25 @@ function Config() {
             <span className="config-toggle-bola" />
           </button>
         </div>
+
+        <div className="config-preferencia">
+          <div className="config-pref-info">
+            <span className="config-pref-titulo">🔔 Notificaciones</span>
+            <span className="config-pref-desc">
+              Recordatorios de hábitos, tareas urgentes y fin de pomodoro
+            </span>
+          </div>
+          <button
+            className={`config-toggle ${
+              notificacionesActivas ? 'activo' : ''
+            }`}
+            onClick={toggleNotificaciones}
+          >
+            <span className="config-toggle-bola" />
+          </button>
+        </div>
       </div>
+
       {/* Estado de datos */}
       <div className="config-seccion">
         <h3 className="config-seccion-titulo">📊 Tus datos actuales</h3>
@@ -158,7 +180,8 @@ function Config() {
 
         <div className="config-aviso">
           ⚠️ <strong>Recomendación:</strong> Hacé un backup una vez por semana.
-          Exportá el archivo y guardalo en Google Drive, OneDrive o un pendrive.
+          Exportá el archivo y guardalo en Google Drive, OneDrive o un
+          pendrive.
         </div>
       </div>
 
@@ -173,7 +196,7 @@ function Config() {
           onClick={manejarReset}
         >
           {confirmReset
-            ? '⚠️ ¿SEGURO? Clic de nuevo pa\' confirmar'
+            ? "⚠️ ¿SEGURO? Clic de nuevo pa' confirmar"
             : '🗑️ Resetear todos los datos'}
         </button>
       </div>

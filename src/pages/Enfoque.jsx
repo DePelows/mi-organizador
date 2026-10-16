@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import usePomodoro from '../hooks/usePomodoro'
+import ModoEnfoqueTotal from '../components/ModoEnfoqueTotal'
 
 const ETIQUETAS_RAPIDAS = [
   { emoji: '📚', nombre: 'Estudio' },
@@ -19,6 +20,7 @@ function Enfoque() {
     periodoActivo,
     registrarPomodoroCurso,
     etiquetasPomodoro,
+    notificarPomodoro,
   } = useApp()
 
   const [searchParams] = useSearchParams()
@@ -31,9 +33,9 @@ function Enfoque() {
       ? periodoActivo.cursos.find((c) => c.id === cursoIdNum)
       : null
 
-  // Etiqueta actual del pomodoro libre
   const [etiqueta, setEtiqueta] = useState('')
   const [mostrarEtiquetas, setMostrarEtiquetas] = useState(false)
+  const [modoTotal, setModoTotal] = useState(false)
 
   const {
     modo,
@@ -48,26 +50,61 @@ function Enfoque() {
     minutosEnfoque: 25,
     minutosDescanso: 5,
     onCompletar: (modoQueTermino) => {
+      notificarPomodoro(modoQueTermino)
       if (modoQueTermino === 'enfoque') {
-        // Si hay curso → lo suma al curso
         if (cursoSeleccionado && periodoActivo) {
           registrarPomodoroCurso(periodoActivo.id, cursoSeleccionado.id, 25)
-          sumarPomodoro() // también suma al total
+          sumarPomodoro()
         } else {
-          // Pomodoro libre → usa la etiqueta
           sumarPomodoro(etiqueta || '')
         }
       }
     },
   })
 
-  const formato = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+  const formato = `${String(minutos).padStart(2, '0')}:${String(
+    segundos
+  ).padStart(2, '0')}`
 
   const quitarCurso = () => navigate('/enfoque')
 
   const seleccionarEtiqueta = (nombre) => {
     setEtiqueta(nombre)
     setMostrarEtiquetas(false)
+  }
+
+  const activarModoTotal = () => {
+    setModoTotal(true)
+    if (!corriendo) {
+      iniciar()
+    }
+  }
+
+  const salirModoTotal = () => {
+    setModoTotal(false)
+  }
+
+  const abandonarMision = () => {
+    // Opción C: pierde el pomodoro
+    pausar()
+    reiniciar()
+    setModoTotal(false)
+  }
+
+  // 🎯 Renderizado del modo enfoque total
+  if (modoTotal) {
+    return (
+      <ModoEnfoqueTotal
+        minutos={minutos}
+        segundos={segundos}
+        corriendo={corriendo}
+        modo={modo}
+        onPausar={pausar}
+        onReanudar={iniciar}
+        onAbandonar={abandonarMision}
+        onTerminar={() => setModoTotal(false)}
+      />
+    )
   }
 
   // Pomodoros por etiqueta
@@ -101,10 +138,7 @@ function Enfoque() {
             <div className="etiqueta-seleccionada">
               <span className="etq-label">🏷️ Etiqueta:</span>
               <span className="etq-nombre">{etiqueta}</span>
-              <button
-                className="etq-quitar"
-                onClick={() => setEtiqueta('')}
-              >
+              <button className="etq-quitar" onClick={() => setEtiqueta('')}>
                 ✕
               </button>
             </div>
@@ -170,12 +204,16 @@ function Enfoque() {
         </button>
       </div>
 
+      {/* 🎯 Botón modo enfoque total */}
+      <button className="btn-modo-total" onClick={activarModoTotal}>
+        🎯 ACTIVAR MODO ENFOQUE TOTAL
+      </button>
+
       <div className="contador-pomodoros">
         <span className="pomodoro-numero">🍅 {pomodoros}</span>
         <span>pomodoros completados en total</span>
       </div>
 
-      {/* Resumen por etiqueta */}
       {Object.keys(pomodorosPorEtiqueta).length > 0 && (
         <div className="etiquetas-resumen">
           <h3 className="etiquetas-resumen-titulo">🏷️ Por etiqueta</h3>
