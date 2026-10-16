@@ -6884,3 +6884,141 @@ body[data-estilo='retro'] .app {
     display: none;
   }
 }
+
+/* =========================================
+   🎯 FIX TOTAL: Tap highlight en mobile
+   ========================================= */
+
+/* Nivel 1: Quitar highlight en TODO */
+*,
+*::before,
+*::after,
+html,
+body,
+button,
+a,
+input,
+select,
+textarea,
+div,
+span,
+li,
+ul,
+nav,
+header,
+main,
+aside,
+section,
+article {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Nivel 2: En links y botones */
+a,
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"],
+label,
+select {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Nivel 3: Elementos clickeables de la app */
+.dash-card,
+.curso-card,
+.rutina-card,
+.habito-item,
+.logro-card,
+.sidebar-item,
+.accion-btn,
+.dash-tarea,
+.racha-item,
+.stat-metrica,
+.comparativa-item,
+.record-item,
+.buscador-resultado,
+.etiqueta-chip,
+.recurrencia-chip,
+.vista-tab,
+.gym-tab,
+.filtros button {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* Nivel 4: Permitir selección SOLO en inputs de texto */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+/* Nivel 5: Evitar zoom con doble tap */
+html {
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+}
+
+/* Nivel 6: Feedback visual propio (reemplaza el feo) */
+@media (max-width: 900px) {
+  button:active,
+  a:active,
+  .dash-card:active,
+  .curso-card:active,
+  .rutina-card:active,
+  .habito-item:active,
+  .logro-card:active,
+  .sidebar-item:active,
+  .accion-btn:active,
+  .dash-tarea:active,
+  .racha-item:active {
+    opacity: 0.6;
+    transform: scale(0.97);
+    transition: opacity 0.08s ease, transform 0.08s ease;
+  }
+}
+
+/* FIX: Ripple nativo Android */
+html, body {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  touch-action: manipulation !important;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+label,
+div,
+span {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+/* WebKit específico */
+@media (max-width: 900px) {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    -webkit-tap-highlight-color: transparent !important;
+    tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
+}
