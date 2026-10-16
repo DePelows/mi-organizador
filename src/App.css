@@ -6056,7 +6056,699 @@ body[data-estilo='retro'] .app {
   }
 
   .app-main {
+    padding: 0.85rem;
+  }
+
+  /* ===== COMPACTAR MOBILE ===== */
+
+  /* Header mobile más compacto */
+  .header-mobile {
+    padding: 0.6rem 0.85rem;
+  }
+
+  .header-btn-menu,
+  .header-btn-tema {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .header-titulo {
+    font-size: 1rem;
+  }
+
+  /* Reducir padding general de páginas */
+  .dashboard,
+  .tareas-page,
+  .cursos-page,
+  .gym-page,
+  .enfoque-page,
+  .habitos-page,
+  .logros-page,
+  .stats-page,
+  .config-page {
+    gap: 0.75rem;
+  }
+
+  /* Headers de páginas más chicos */
+  .dashboard-header,
+  .stats-header,
+  .config-header,
+  .gym-header,
+  .periodo-header {
     padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+  }
+
+  .dashboard-header h2,
+  .stats-header h2,
+  .config-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .dashboard-fecha,
+  .stats-subtitulo,
+  .config-subtitulo {
+    font-size: 0.8rem;
+  }
+
+  .dashboard-nivel-info {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Títulos de secciones */
+  .dashboard-titulo,
+  .stats-card-titulo,
+  .gym-seccion-titulo {
+    font-size: 1rem;
+    margin-bottom: 0.65rem;
+  }
+
+  /* Cards del dashboard más chicas */
+  .dashboard-grid {
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .dash-card {
+    padding: 0.85rem;
+    border-radius: 12px;
+    gap: 0.75rem;
+  }
+
+  .dash-icon {
+    font-size: 1.6rem;
+  }
+
+  .dash-valor {
+    font-size: 1.15rem;
+  }
+
+  .dash-label {
+    font-size: 0.7rem;
+  }
+
+  .dash-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  /* Acciones rápidas */
+  .acciones-grid {
+    gap: 0.5rem;
+  }
+
+  .accion-btn {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  .accion-icon {
+    font-size: 1.3rem;
+  }
+
+  /* Secciones del dashboard */
+  .dashboard-seccion {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Tareas pendientes */
+  .dash-tarea {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Rachas */
+  .rachas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .racha-item {
+    padding: 0.65rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .racha-emoji {
+    font-size: 1.2rem;
+  }
+
+  .racha-nombre {
+    font-size: 0.8rem;
+  }
+
+  .racha-dias {
+    font-size: 0.7rem;
+  }
+
+  /* Logros recientes */
+  .logros-recientes {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.4rem;
+  }
+
+  .logro-reciente {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .lr-emoji {
+    font-size: 1rem;
+  }
+
+  /* Tareas - formulario compacto */
+  .formulario-tarea {
+    margin-bottom: 1rem;
+    gap: 0.4rem;
+  }
+
+  .formulario-tarea-fila {
+    gap: 0.35rem;
+  }
+
+  .formulario-tarea-fila input[type='text'] {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+    min-width: 100%;
+  }
+
+  .formulario-tarea-fila select {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+    flex: 1;
+  }
+
+  .btn-fecha {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .formulario-tarea-fila button[type='submit'] {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    flex: 1;
+  }
+
+  /* Lista de tareas */
+  .lista-tareas {
+    gap: 0.4rem;
+  }
+
+  .tarea-item {
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .tarea-titulo {
+    font-size: 0.9rem;
+  }
+
+  .tarea-meta {
+    gap: 0.3rem;
+  }
+
+  .prioridad,
+  .tarea-fecha,
+  .tarea-recurrencia {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .tarea-subtareas-badge {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  /* Filtros y vistas */
+  .filtros,
+  .vista-tabs {
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .filtros button,
+  .vista-tab {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Cursos */
+  .lista-cursos {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .curso-card {
+    padding: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .curso-emoji {
+    font-size: 1.5rem;
+  }
+
+  .curso-header h3 {
+    font-size: 1rem;
+  }
+
+  .curso-stats {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .btn-estudiar {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    margin-top: 0.65rem;
+  }
+
+  /* Gym */
+  .gym-stats-global {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .gym-stat-item {
+    padding: 0.65rem 0.5rem;
+    gap: 0.4rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .gs-icon {
+    font-size: 1.2rem;
+  }
+
+  .gs-valor {
+    font-size: 1.1rem;
+  }
+
+  .gs-label {
+    font-size: 0.65rem;
+  }
+
+  .rutina-hoy-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .rh-emoji {
+    font-size: 2rem;
+  }
+
+  .rh-header h4 {
+    font-size: 1.05rem;
+  }
+
+  .rh-btn-completar {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .lista-rutinas {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .rutina-card {
+    padding: 0.85rem;
+  }
+
+  /* Hábitos */
+  .lista-habitos {
+    gap: 0.75rem;
+  }
+
+  .habito-item {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .habito-emoji-wrapper {
+    width: 44px;
+    height: 44px;
+  }
+
+  .habito-emoji {
+    font-size: 1.3rem;
+  }
+
+  .habito-nombre {
+    font-size: 0.95rem;
+  }
+
+  .habito-stats {
+    font-size: 0.75rem;
+    gap: 0.65rem;
+  }
+
+  .habito-dias {
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .dia {
+    padding: 0.4rem 0;
+    font-size: 0.65rem;
+  }
+
+  .dia-letra {
+    font-size: 0.6rem;
+  }
+
+  .btn-marcar {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  /* Logros */
+  .logros-header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .logros-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .logros-subtitulo {
+    font-size: 0.8rem;
+  }
+
+  .logros-xp-badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .logros-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  .logro-card {
+    padding: 1rem 0.6rem;
+  }
+
+  .logro-emoji {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .logro-nombre {
+    font-size: 0.85rem;
+  }
+
+  .logro-descripcion {
+    font-size: 0.7rem;
+    min-height: auto;
+    margin-bottom: 0.65rem;
+  }
+
+  .logro-desbloqueado-badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Stats */
+  .stats-metricas {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-metrica {
+    padding: 0.6rem 0.4rem;
+  }
+
+  .sm-valor {
+    font-size: 1.15rem;
+  }
+
+  .sm-label {
+    font-size: 0.65rem;
+  }
+
+  .stats-card {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .chart-wrapper,
+  .chart-wrapper-doughnut {
+    height: 200px;
+  }
+
+  /* Comparativa */
+  .comparativa-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+  }
+
+  .comparativa-item {
+    padding: 0.7rem 0.4rem;
+  }
+
+  .comp-label {
+    font-size: 0.65rem;
+  }
+
+  .comp-total {
+    font-size: 1.25rem;
+  }
+
+  .comp-detalle {
+    font-size: 0.6rem;
+  }
+
+  /* Récords */
+  .records-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .record-item {
+    padding: 0.75rem;
+  }
+
+  .record-icono {
+    font-size: 1.5rem;
+  }
+
+  .record-valor {
+    font-size: 1rem;
+  }
+
+  .record-label {
+    font-size: 0.7rem;
+  }
+
+  /* Mapa de calor */
+  .mapa-dia {
+    width: 8px;
+    height: 8px;
+  }
+
+  .mesa-calor-leyenda {
+    font-size: 0.65rem;
+  }
+
+  /* Config */
+  .config-seccion {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .config-seccion-titulo {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .config-resumen-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .cri-valor {
+    font-size: 1.05rem;
+  }
+
+  .cri-label {
+    font-size: 0.65rem;
+  }
+
+  .config-dato {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .config-dato-valor {
+    font-size: 0.9rem;
+  }
+
+  .config-preferencia {
+    padding: 0.6rem 0;
+  }
+
+  .config-pref-titulo {
+    font-size: 0.9rem;
+  }
+
+  .config-pref-desc {
+    font-size: 0.7rem;
+  }
+
+  .config-toggle {
+    width: 44px;
+    height: 24px;
+  }
+
+  .config-toggle-bola {
+    width: 18px;
+    height: 18px;
+  }
+
+  .config-toggle.activo .config-toggle-bola {
+    transform: translateX(20px);
+  }
+
+  .colores-app-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .color-app-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .estilos-visuales-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .estilo-btn {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .estilo-emoji {
+    font-size: 1.3rem;
+  }
+
+  .estilo-nombre {
+    font-size: 0.75rem;
+  }
+
+  /* Enfoque */
+  .enfoque-page {
+    padding: 0 0.5rem;
+  }
+
+  .timer {
+    padding: 2rem 1rem 2.5rem;
+    margin: 1rem 0;
+  }
+
+  .tiempo {
+    font-size: 3.5rem;
+  }
+
+  .modo-label {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .modos button {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .botones-timer {
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .botones-timer button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-modo-total {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    margin: 0.75rem auto;
+  }
+
+  .contador-pomodoros {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .pomodoro-numero {
+    font-size: 1.4rem;
+  }
+
+  .contador-pomodoros span:last-child {
+    font-size: 0.8rem;
+  }
+
+  /* Buscador */
+  .buscador-modal {
+    max-width: 100%;
+    margin: 0 0.5rem;
+  }
+
+  .buscador-input {
+    font-size: 1rem;
+  }
+
+  .res-titulo {
+    font-size: 0.9rem;
+  }
+
+  .res-subtitulo {
+    font-size: 0.7rem;
+  }
+
+  /* Modo enfoque total */
+  .modo-enfoque-total {
+    padding: 2rem 1rem;
+  }
+
+  .met-frase-texto {
+    font-size: 1.1rem;
+  }
+
+  .met-frase-autor {
+    font-size: 0.75rem;
+  }
+
+  .met-timer-wrapper {
+    width: 240px;
+    height: 240px;
+  }
+
+  .met-tiempo {
+    font-size: 3.5rem;
+  }
+
+  .met-label {
+    font-size: 0.7rem;
+  }
+
+  .met-botones {
+    gap: 0.5rem;
+  }
+
+  .met-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -6074,4 +6766,121 @@ body[data-estilo='retro'] .app {
 /* Ajuste del contenido cuando el sidebar está colapsado */
 .app-layout.sidebar-colapsado .app-contenido {
   margin-left: 0;
+}
+
+/* =========================================
+   🎯 AJUSTES FINOS MOBILE
+   ========================================= */
+
+/* Tareas: tacho más grande pa' dedo */
+.tarea-info input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* Subtareas tacho */
+.subtarea-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Pomodoro: botones más grandes pa' dedo */
+@media (max-width: 900px) {
+  .btn-iniciar,
+  .btn-pausar,
+  .btn-reiniciar {
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+
+  .btn-marcar {
+    min-height: 48px;
+  }
+
+  .btn-estudiar {
+    min-height: 44px;
+  }
+
+  .rh-btn-completar {
+    min-height: 48px;
+  }
+
+  .config-toggle {
+    min-width: 48px;
+    min-height: 28px;
+  }
+
+  /* Cards con hover más sutil en mobile */
+  .dash-card:active,
+  .curso-card:active,
+  .rutina-card:active {
+    transform: scale(0.98);
+  }
+
+  /* Botones primarios táctiles */
+  .btn-primario,
+  .btn-peligro {
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+  }
+
+  /* Headers no sticky en mobile (para más espacio) */
+  .gym-header,
+  .periodo-header,
+  .logros-header {
+    position: static;
+  }
+
+  /* Charts más chicos */
+  .chart-wrapper,
+  .chart-wrapper-doughnut {
+    height: 180px;
+  }
+
+  /* Modales full-screen en mobile */
+  .modal-contenido {
+    max-width: 100%;
+    margin: 0.5rem;
+    max-height: 90vh;
+  }
+
+  /* Mapa de calor más chico */
+  .mapa-dia {
+    width: 9px;
+    height: 9px;
+  }
+
+  .semana-col {
+    gap: 2px;
+  }
+
+  .mapa-calor-grid {
+    gap: 2px;
+  }
+
+  /* Estadísticas compactas */
+  .stat-metrica {
+    min-height: 70px;
+    justify-content: center;
+  }
+
+  /* Récords */
+  .record-item {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  /* Sidebar mobile más ancho */
+  .sidebar {
+    width: 85%;
+    max-width: 320px;
+  }
+
+  /* Navbar horizontal oculta en mobile (ya está en sidebar) */
+  .navbar {
+    display: none;
+  }
 }
