@@ -290,7 +290,7 @@ function Config() {
 
       {/* Info */}
       <div className="config-footer">
-        <p>Mi Organizador Pro v1.0</p>
+        <p>Focus v1.0</p>
         <p>Hecho con ❤️ para uso personal</p>
         <p>Hoy: {fechaHoy()}</p>
       </div>
