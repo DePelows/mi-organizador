@@ -7019,6 +7019,36 @@ span {
   * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
     -webkit-tap-highlight-color: transparent !important;
-    tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
+}
+
+/* 🎯 FIX DEFINITIVO: Safe area en el sidebar */
+@media (max-width: 900px) {
+  .sidebar {
+    padding-top: 4rem !important;
+  }
+}
+
+/* Por si acaso, también pa'l header mobile */
+@media (max-width: 900px) {
+  .header-mobile {
+    padding-top: 2.5rem !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    padding-top: max(2.5rem, env(safe-area-inset-top, 40px)) !important;
+  }
+}
+
+/* 🎯 FIX: Safe-area en el sidebar y header */
+@media (max-width: 900px) {
+  .sidebar {
+    padding-top: calc(1rem + env(safe-area-inset-top, 40px)) !important;
+  }
+
+  .header-mobile {
+    padding-top: calc(0.6rem + env(safe-area-inset-top, 40px)) !important;
   }
 }

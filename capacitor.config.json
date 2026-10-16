@@ -11,8 +11,16 @@
     "backgroundColor": "#0f0f14"
   },
   "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0f0f14",
+      "overlaysWebView": false,
+      "hidden": false
+    },
     "SplashScreen": {
-      "launchShowDuration": 0
+      "launchShowDuration": 500,
+      "backgroundColor": "#0f0f14",
+      "showSpinner": false
     }
   }
 }
