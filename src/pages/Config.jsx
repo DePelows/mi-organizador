@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useApp, fechaHoy } from '../context/AppContext'
+import { COLORES_DISPONIBLES } from '../utils/colores'
 
 function Config() {
   const {
@@ -18,6 +19,8 @@ function Config() {
     toggleSonidos,
     notificacionesActivas,
     toggleNotificaciones,
+    colorPrincipal,
+  setColorPrincipal,
   } = useApp()
 
   const fileInputRef = useRef(null)
@@ -121,6 +124,30 @@ function Config() {
           >
             <span className="config-toggle-bola" />
           </button>
+        </div>
+      </div>
+      
+      <div className="config-preferencia config-preferencia-colores">
+        <div className="config-pref-info">
+          <span className="config-pref-titulo">🎨 Color principal</span>
+          <span className="config-pref-desc">
+            Elegí el color de acento de la app
+          </span>
+        </div>
+        <div className="colores-app-grid">
+          {COLORES_DISPONIBLES.map((c) => (
+            <button
+              key={c.id}
+              className={`color-app-btn ${
+                colorPrincipal === c.id ? 'activo' : ''
+              }`}
+              onClick={() => setColorPrincipal(c.id)}
+              title={c.nombre}
+              style={{ background: c.primario }}
+            >
+              {colorPrincipal === c.id && '✓'}
+            </button>
+          ))}
         </div>
       </div>
 

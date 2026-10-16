@@ -237,6 +237,10 @@ export function AppProvider({ children }) {
   )
   const [diasUso, setDiasUso] = useLocalStorage('diasUso', [])
   const [tema, setTema] = useLocalStorage('tema', 'oscuro')
+  const [colorPrincipal, setColorPrincipal] = useLocalStorage(
+  'colorPrincipal',
+  'morado'
+  )
   const [sonidosActivos, setSonidosActivos] = useLocalStorage(
     'sonidosActivos',
     true
@@ -703,7 +707,8 @@ export function AppProvider({ children }) {
   // 🎨 Aplicar tema al body
   useEffect(() => {
     document.body.setAttribute('data-tema', tema)
-  }, [tema])
+    document.body.setAttribute('data-color', colorPrincipal)
+  }, [tema, colorPrincipal])
 
   const toggleTema = () => {
     setTema((t) => (t === 'oscuro' ? 'claro' : 'oscuro'))
@@ -977,6 +982,9 @@ export function AppProvider({ children }) {
         // Tema
         tema,
         toggleTema,
+        // Color
+        colorPrincipal,
+        setColorPrincipal,
         // Sonidos
         sonidosActivos,
         toggleSonidos,
