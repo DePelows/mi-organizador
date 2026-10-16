@@ -6,7 +6,12 @@ import {
   useRef,
 } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage'
-import { sonidoLogro, sonidoSubirNivel } from '../utils/sonidos'
+import {
+  sonidoLogro,
+  sonidoSubirNivel,
+  sonidoTareaCompletada,
+  sonidoHabito,
+} from '../utils/sonidos'
 import { lanzarConfetiLogro, lanzarConfetiNivel } from '../utils/confeti'
 import {
   pedirPermisoNotificaciones,
@@ -49,6 +54,31 @@ function calcularRacha(fechas) {
     cursor.setDate(cursor.getDate() - 1)
   }
   return racha
+}
+
+// 🔁 Calcula la siguiente fecha según la recurrencia
+function calcularSiguienteFecha(fechaBase, recurrencia, diasSemana = []) {
+  const [y, m, d] = fechaBase.split('-').map(Number)
+  const base = new Date(y, m - 1, d)
+
+  if (recurrencia === 'diaria') {
+    base.setDate(base.getDate() + 1)
+  } else if (recurrencia === 'semanal') {
+    base.setDate(base.getDate() + 7)
+  } else if (recurrencia === 'mensual') {
+    base.setMonth(base.getMonth() + 1)
+  } else if (recurrencia === 'dias-semana' && diasSemana.length > 0) {
+    for (let i = 1; i <= 7; i++) {
+      base.setDate(base.getDate() + 1)
+      const diaSemana = (base.getDay() + 6) % 7
+      if (diasSemana.includes(diaSemana)) break
+    }
+  }
+
+  const yn = base.getFullYear()
+  const mn = String(base.getMonth() + 1).padStart(2, '0')
+  const dn = String(base.getDate()).padStart(2, '0')
+  return `${yn}-${mn}-${dn}`
 }
 
 // 🎯 SISTEMA DE NIVELES
@@ -236,10 +266,23 @@ export function AppProvider({ children }) {
     new Date().toISOString()
   )
   const [diasUso, setDiasUso] = useLocalStorage('diasUso', [])
-  const [tema, setTema] = useLocalStorage('tema', 'oscuro')
+
+  // 🌗 Detecta el tema del sistema como default
+  const temaSistema =
+    typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: light)').matches
+      ? 'claro'
+      : 'oscuro'
+
+  const [tema, setTema] = useLocalStorage('tema', temaSistema)
   const [colorPrincipal, setColorPrincipal] = useLocalStorage(
-  'colorPrincipal',
-  'morado'
+    'colorPrincipal',
+    'morado'
+  )
+  const [estiloVisual, setEstiloVisual] = useLocalStorage(
+    'estiloVisual',
+    'clasico'
   )
   const [sonidosActivos, setSonidosActivos] = useLocalStorage(
     'sonidosActivos',
@@ -315,6 +358,34 @@ export function AppProvider({ children }) {
           ? 15
           : 10
       darXP(xp)
+
+      if (sonidosActivos) {
+        sonidoTareaCompletada()
+      }
+
+      // 🔁 Si es recurrente → crear la siguiente
+      if (tarea.recurrencia && tarea.recurrencia !== 'ninguna') {
+        const nuevaFecha = calcularSiguienteFecha(
+          tarea.fechaLimite || fechaHoy(),
+          tarea.recurrencia,
+          tarea.diasSemana
+        )
+
+        const nuevaTarea = {
+          ...tarea,
+          id: Date.now(),
+          completada: false,
+          completadaEn: null,
+          fechaLimite: nuevaFecha,
+          subtareas: (tarea.subtareas || []).map((s) => ({
+            ...s,
+            id: Date.now() + Math.random(),
+            completada: false,
+          })),
+        }
+
+        setTareas((prev) => [...prev, nuevaTarea])
+      }
     }
   }
 
@@ -383,7 +454,6 @@ export function AppProvider({ children }) {
     darXP(25)
   }
 
-  // 🔔 Notificar pomodoro terminado
   const notificarPomodoro = (modo) => {
     if (notificacionesActivas && tienePermiso()) {
       notificarPomodoroTerminado(modo)
@@ -421,6 +491,9 @@ export function AppProvider({ children }) {
 
     if (seMarca) {
       darXP(15)
+      if (sonidosActivos) {
+        sonidoHabito()
+      }
     }
   }
 
@@ -708,7 +781,8 @@ export function AppProvider({ children }) {
   useEffect(() => {
     document.body.setAttribute('data-tema', tema)
     document.body.setAttribute('data-color', colorPrincipal)
-  }, [tema, colorPrincipal])
+    document.body.setAttribute('data-estilo', estiloVisual)
+  }, [tema, colorPrincipal, estiloVisual])
 
   const toggleTema = () => {
     setTema((t) => (t === 'oscuro' ? 'claro' : 'oscuro'))
@@ -716,6 +790,52 @@ export function AppProvider({ children }) {
 
   const toggleSonidos = () => {
     setSonidosActivos((s) => !s)
+  }
+
+  // 🎯 Calcular XP retroactivo
+  const calcularXPRetroactivo = () => {
+    let xpCalculado = 0
+
+    tareas.forEach((t) => {
+      if (t.completada) {
+        xpCalculado +=
+          t.prioridad === 'alta' ? 20 : t.prioridad === 'media' ? 15 : 10
+      }
+    })
+
+    xpCalculado += pomodoros * 25
+
+    habitos.forEach((h) => {
+      xpCalculado += h.fechas.length * 15
+    })
+
+    xpCalculado += entrenos.length * 30
+
+    return xpCalculado
+  }
+
+  const reclamarXPRetroactivo = () => {
+    const xpARecibir = calcularXPRetroactivo()
+    const xpDiferencia = xpARecibir - xpTotal
+
+    if (xpDiferencia <= 0) {
+      agregarToast({
+        tipo: 'logro',
+        titulo: '⚡ XP ya reclamado',
+        mensaje: 'No tenés XP pendiente por reclamar',
+      })
+      return 0
+    }
+
+    setXpTotal(xpARecibir)
+
+    agregarToast({
+      tipo: 'nivel',
+      titulo: `⚡ +${xpDiferencia} XP reclamado`,
+      mensaje: 'Tu progreso pasado ha sido contado',
+    })
+
+    return xpDiferencia
   }
 
   // 🔔 Activar notificaciones
@@ -968,6 +1088,8 @@ export function AppProvider({ children }) {
         logros,
         logrosDesbloqueados,
         primerUso,
+        calcularXPRetroactivo,
+        reclamarXPRetroactivo,
         // App
         rachaApp,
         recordApp,
@@ -985,6 +1107,9 @@ export function AppProvider({ children }) {
         // Color
         colorPrincipal,
         setColorPrincipal,
+        // Estilo visual
+        estiloVisual,
+        setEstiloVisual,
         // Sonidos
         sonidosActivos,
         toggleSonidos,

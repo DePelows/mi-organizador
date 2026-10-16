@@ -10,9 +10,10 @@ function usePomodoro({
   const [corriendo, setCorriendo] = useState(false)
 
   const intervaloRef = useRef(null)
-  const yaAvisoRef = useRef(false) // ← evita duplicados
+  const yaAvisoRef = useRef(false)
+  const tiempoFinRef = useRef(null)
 
-  // Guardamos el callback en una ref pa' no re-crear el interval
+  // Guardar callback en ref
   const onCompletarRef = useRef(onCompletar)
   useEffect(() => {
     onCompletarRef.current = onCompletar
@@ -20,58 +21,76 @@ function usePomodoro({
 
   // Cambia el tiempo cuando cambia el modo
   useEffect(() => {
-    setSegundos(
-      (modo === 'enfoque' ? minutosEnfoque : minutosDescanso) * 60
-    )
-    yaAvisoRef.current = false // resetea el flag al cambiar de modo
+    setSegundos((modo === 'enfoque' ? minutosEnfoque : minutosDescanso) * 60)
+    yaAvisoRef.current = false
   }, [modo, minutosEnfoque, minutosDescanso])
 
-  // El tick del timer
+  // ⏱️ Lógica del timer (con tiempo real, no acumulativo)
   useEffect(() => {
-    if (!corriendo) return
+    if (!corriendo) {
+      // Cuando se pausa, limpiamos el intervalo
+      if (intervaloRef.current) {
+        clearInterval(intervaloRef.current)
+        intervaloRef.current = null
+      }
+      return
+    }
+
+    // Guardamos el momento exacto en que debería terminar
+    if (!tiempoFinRef.current) {
+      tiempoFinRef.current = Date.now() + segundos * 1000
+    }
 
     intervaloRef.current = setInterval(() => {
+      const ahora = Date.now()
+      const restante = Math.max(
+        0,
+        Math.round((tiempoFinRef.current - ahora) / 1000)
+      )
+
       setSegundos((s) => {
-        if (s <= 1) {
-          // ⚠️ Solo avisa UNA vez por ciclo
-          if (!yaAvisoRef.current) {
-            yaAvisoRef.current = true
+        if (restante <= 0 && !yaAvisoRef.current) {
+          yaAvisoRef.current = true
+          tiempoFinRef.current = null
 
-            // Reproduce alarma
-            reproducirAlarma()
+          // Reproducir alarma
+          reproducirAlarma()
 
-            // Avisa al componente (solo una vez)
-            if (onCompletarRef.current) {
-              onCompletarRef.current(modo)
-            }
-
-            // Cambia al otro modo
-            setModo((m) => (m === 'enfoque' ? 'descanso' : 'enfoque'))
+          // Avisar
+          if (onCompletarRef.current) {
+            onCompletarRef.current(modo)
           }
+
+          // Cambiar modo
+          setModo((m) => (m === 'enfoque' ? 'descanso' : 'enfoque'))
           return 0
         }
-        return s - 1
+        return restante
       })
-    }, 1000)
+    }, 250) // Cada 250ms pa' mayor precisión
 
-    return () => clearInterval(intervaloRef.current)
-  }, [corriendo, modo])
+    return () => {
+      if (intervaloRef.current) {
+        clearInterval(intervaloRef.current)
+        intervaloRef.current = null
+      }
+    }
+  }, [corriendo, modo, segundos])
 
-  // 🔊 Función que reproduce la alarma 5 segundos
+  // 🔊 Alarma
   const reproducirAlarma = () => {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext
       const ctx = new AudioCtx()
 
-      const duracion = 5 // segundos
+      const duracion = 5
       const ahora = ctx.currentTime
 
-      // Crea un "beep" repetido durante 5 segundos
       for (let i = 0; i < duracion * 2; i++) {
         const osc = ctx.createOscillator()
         const gain = ctx.createGain()
 
-        osc.frequency.value = 880 // tono agudo tipo alarma
+        osc.frequency.value = 880
         osc.type = 'sine'
 
         const inicio = ahora + i * 0.5
@@ -85,24 +104,36 @@ function usePomodoro({
         osc.stop(inicio + 0.4)
       }
 
-      // Cierra el contexto al terminar
       setTimeout(() => ctx.close(), duracion * 1000 + 500)
     } catch (e) {
       console.warn('No se pudo reproducir la alarma:', e)
     }
   }
 
-  const iniciar = useCallback(() => setCorriendo(true), [])
-  const pausar = useCallback(() => setCorriendo(false), [])
+  const iniciar = useCallback(() => {
+    // Si no hay tiempo fin, lo calculamos
+    if (!tiempoFinRef.current) {
+      tiempoFinRef.current = Date.now() + segundos * 1000
+    }
+    setCorriendo(true)
+  }, [segundos])
+
+  const pausar = useCallback(() => {
+    setCorriendo(false)
+    // No borramos tiempoFinRef para poder reanudar
+  }, [])
 
   const reiniciar = useCallback(() => {
     setCorriendo(false)
     yaAvisoRef.current = false
+    tiempoFinRef.current = null
     setSegundos((modo === 'enfoque' ? minutosEnfoque : minutosDescanso) * 60)
   }, [modo, minutosEnfoque, minutosDescanso])
 
   const cambiarModo = useCallback((nuevoModo) => {
     setCorriendo(false)
+    yaAvisoRef.current = false
+    tiempoFinRef.current = null
     setModo(nuevoModo)
   }, [])
 

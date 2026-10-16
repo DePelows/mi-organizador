@@ -4011,17 +4011,28 @@ body[data-tema="claro"] .input-fecha-edit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
 }
 
 .met-tiempo {
-  font-size: 5.5rem;
+  font-size: 5rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.03em;
   color: #fff;
   text-shadow: 0 0 40px var(--acento);
+  line-height: 1;
   animation: latir 2s ease-in-out infinite;
+}
+
+.met-label {
+  font-size: 0.8rem;
+  color: var(--acento-claro);
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 @keyframes latir {
@@ -4704,4 +4715,977 @@ textarea:focus-visible {
 .config-page,
 .dashboard {
   animation: pageEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* XP Retroactivo */
+.config-xp-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.config-xp-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-primario);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+
+.config-xp-label {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.config-xp-valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--acento-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Animación al completar tarea */
+@keyframes tacharTarea {
+  from {
+    text-decoration-color: transparent;
+  }
+  to {
+    text-decoration-color: var(--texto-secundario);
+  }
+}
+
+.tarea-item.completada .tarea-titulo {
+  animation: tacharTarea 0.4s ease forwards;
+}
+
+/* Animación de check */
+@keyframes checkPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tarea-item.completada .tarea-info input[type="checkbox"] {
+  animation: checkPop 0.35s ease;
+}
+
+/* Botón cerrar de toasts */
+.toast {
+  position: relative;
+}
+
+.toast-cerrar {
+  background: transparent;
+  border: none;
+  color: var(--texto-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  margin-left: 0.25rem;
+  flex-shrink: 0;
+}
+
+.toast-cerrar:hover {
+  background: var(--bg-hover);
+  color: var(--texto);
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* =========================================
+   RECURRENCIA DE TAREAS
+   ========================================= */
+.btn-fecha.activo {
+  background: var(--acento);
+  color: #fff;
+  border-color: var(--acento);
+}
+
+.formulario-recurrencia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  animation: slideUp 0.2s ease;
+}
+
+.formulario-recurrencia > label {
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+  font-weight: 500;
+}
+
+.recurrencia-opciones {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.recurrencia-chip {
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-primario);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.recurrencia-chip:hover {
+  background: var(--bg-hover);
+  color: var(--texto);
+}
+
+.recurrencia-chip.activo {
+  background: var(--acento);
+  color: #fff;
+  border-color: var(--acento);
+  font-weight: 600;
+}
+
+.dias-semana-recurrencia {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  max-width: 320px;
+}
+
+.dia-semana-btn {
+  padding: 0.5rem 0;
+  background: var(--bg-primario);
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto-secundario);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.dia-semana-btn:hover {
+  transform: scale(1.05);
+}
+
+.dia-semana-btn.activo {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: #fff;
+}
+
+.tarea-recurrencia {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  background: color-mix(in srgb, var(--acento) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acento) 40%, transparent);
+  border-radius: 6px;
+  color: var(--acento-claro);
+  font-weight: 600;
+}
+
+/* =========================================
+   VISTA SEMANAL
+   ========================================= */
+.vista-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--borde);
+  padding-bottom: 0.5rem;
+}
+
+.vista-tab {
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.vista-tab:hover {
+  background: var(--bg-secundario);
+  color: var(--texto);
+}
+
+.vista-tab.activo {
+  background: var(--acento);
+  color: #fff;
+}
+
+.vista-semanal {
+  animation: fadeInUp 0.3s ease;
+}
+
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.dia-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 200px;
+  padding: 0.75rem;
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.dia-columna.hoy {
+  border-color: var(--acento);
+  background: color-mix(in srgb, var(--acento) 8%, var(--bg-secundario));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--acento) 20%, transparent);
+}
+
+.dia-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.dia-nombre {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.dia-numero {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.dia-columna.hoy .dia-numero {
+  color: var(--acento-claro);
+}
+
+.dia-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dia-vacio {
+  text-align: center;
+  color: var(--texto-muted);
+  font-size: 0.75rem;
+  padding: 0.5rem;
+}
+
+.dia-tarea {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--bg-primario);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+
+.dia-tarea:hover {
+  transform: translateX(2px);
+}
+
+.dia-tarea.completada {
+  opacity: 0.5;
+}
+
+.dia-tarea.completada .dia-tarea-titulo {
+  text-decoration: line-through;
+}
+
+.dia-tarea-punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.prioridad-alta {
+  background: #ef4444;
+}
+
+.prioridad-media {
+  background: #f59e0b;
+}
+
+.prioridad-baja {
+  background: #10b981;
+}
+
+.dia-tarea-titulo {
+  flex: 1;
+  color: var(--texto);
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.tareas-sin-fecha {
+  padding: 1rem;
+  background: var(--bg-secundario);
+  border: 1px dashed var(--borde);
+  border-radius: 12px;
+}
+
+.tareas-sin-fecha-titulo {
+  font-size: 0.95rem;
+  color: var(--texto-secundario);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.tareas-sin-fecha-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tarea-sin-fecha-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-primario);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .dias-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dias-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dia-columna {
+    min-height: auto;
+  }
+}
+
+/* =========================================
+   RECURRENCIA DE TAREAS
+   ========================================= */
+.btn-fecha.activo {
+  background: var(--acento);
+  color: #fff;
+  border-color: var(--acento);
+}
+
+.formulario-recurrencia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  animation: slideUp 0.2s ease;
+}
+
+.formulario-recurrencia > label {
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+  font-weight: 500;
+}
+
+.recurrencia-opciones {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.recurrencia-chip {
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-primario);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.recurrencia-chip:hover {
+  background: var(--bg-hover);
+  color: var(--texto);
+}
+
+.recurrencia-chip.activo {
+  background: var(--acento);
+  color: #fff;
+  border-color: var(--acento);
+  font-weight: 600;
+}
+
+.dias-semana-recurrencia {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  max-width: 320px;
+}
+
+.dia-semana-btn {
+  padding: 0.5rem 0;
+  background: var(--bg-primario);
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto-secundario);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.dia-semana-btn:hover {
+  transform: scale(1.05);
+}
+
+.dia-semana-btn.activo {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: #fff;
+}
+
+.tarea-recurrencia {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  background: color-mix(in srgb, var(--acento) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acento) 40%, transparent);
+  border-radius: 6px;
+  color: var(--acento-claro);
+  font-weight: 600;
+}
+
+/* =========================================
+   VISTA SEMANAL
+   ========================================= */
+.vista-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--borde);
+  padding-bottom: 0.5rem;
+}
+
+.vista-tab {
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.vista-tab:hover {
+  background: var(--bg-secundario);
+  color: var(--texto);
+}
+
+.vista-tab.activo {
+  background: var(--acento);
+  color: #fff;
+}
+
+.vista-semanal {
+  animation: fadeInUp 0.3s ease;
+}
+
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.dia-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 200px;
+  padding: 0.75rem;
+  background: var(--bg-secundario);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.dia-columna.hoy {
+  border-color: var(--acento);
+  background: color-mix(in srgb, var(--acento) 8%, var(--bg-secundario));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--acento) 20%, transparent);
+}
+
+.dia-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.dia-nombre {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.dia-numero {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.dia-columna.hoy .dia-numero {
+  color: var(--acento-claro);
+}
+
+.dia-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dia-vacio {
+  text-align: center;
+  color: var(--texto-muted);
+  font-size: 0.75rem;
+  padding: 0.5rem;
+}
+
+.dia-tarea {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--bg-primario);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+
+.dia-tarea:hover {
+  transform: translateX(2px);
+}
+
+.dia-tarea.completada {
+  opacity: 0.5;
+}
+
+.dia-tarea.completada .dia-tarea-titulo {
+  text-decoration: line-through;
+}
+
+.dia-tarea-punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.dia-tarea-punto.prioridad-alta {
+  background: #ef4444;
+}
+
+.dia-tarea-punto.prioridad-media {
+  background: #f59e0b;
+}
+
+.dia-tarea-punto.prioridad-baja {
+  background: #10b981;
+}
+
+.dia-tarea-titulo {
+  flex: 1;
+  color: var(--texto);
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.tareas-sin-fecha {
+  padding: 1rem;
+  background: var(--bg-secundario);
+  border: 1px dashed var(--borde);
+  border-radius: 12px;
+}
+
+.tareas-sin-fecha-titulo {
+  font-size: 0.95rem;
+  color: var(--texto-secundario);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.tareas-sin-fecha-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tarea-sin-fecha-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-primario);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .dias-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dias-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dia-columna {
+    min-height: auto;
+  }
+}
+
+/* =========================================
+   SELECTOR DE ESTILO VISUAL
+   ========================================= */
+.estilos-visuales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.estilo-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.85rem 0.5rem;
+  background: var(--bg-primario);
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.estilo-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--acento);
+  box-shadow: 0 4px 15px var(--sombra);
+}
+
+.estilo-btn.activo {
+  border-color: var(--acento);
+  background: color-mix(in srgb, var(--acento) 15%, var(--bg-primario));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--acento) 30%, transparent);
+}
+
+.estilo-emoji {
+  font-size: 1.6rem;
+}
+
+.estilo-nombre {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+/* =========================================
+   🎭 ESTILO: MATRIX
+   ========================================= */
+body[data-estilo='matrix'] {
+  --bg-primario: #000000;
+  --bg-secundario: #0a1408;
+  --bg-terciario: #142010;
+  --bg-hover: #1a2a15;
+  --bg-elevado: #0d1808;
+  --borde: #1a3a15;
+  --borde-hover: #2a5a20;
+  --texto: #39ff14;
+  --texto-secundario: #6db34a;
+  --texto-muted: #3d6b30;
+  --acento: #39ff14;
+  --acento-hover: #2ecc0f;
+  --acento-claro: #7fff5c;
+}
+
+body[data-estilo='matrix'] * {
+  font-family: 'Courier New', 'Consolas', monospace !important;
+}
+
+body[data-estilo='matrix'] h1,
+body[data-estilo='matrix'] h2,
+body[data-estilo='matrix'] h3 {
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+  letter-spacing: 0.05em;
+}
+
+body[data-estilo='matrix'] .app {
+  background-image: linear-gradient(
+    rgba(57, 255, 20, 0.02) 1px,
+    transparent 1px
+  ),
+  linear-gradient(90deg, rgba(57, 255, 20, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+body[data-estilo='matrix'] .dash-card,
+body[data-estilo='matrix'] .curso-card,
+body[data-estilo='matrix'] .rutina-card {
+  border-color: rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+}
+
+/* =========================================
+   🌆 ESTILO: CYBERPUNK
+   ========================================= */
+body[data-estilo='cyberpunk'] {
+  --bg-primario: #0d0221;
+  --bg-secundario: #1a0b2e;
+  --bg-terciario: #251644;
+  --bg-hover: #332255;
+  --bg-elevado: #1a0b2e;
+  --borde: #3d1f6b;
+  --borde-hover: #5a2f9b;
+  --texto: #f0f0ff;
+  --texto-secundario: #b89dd9;
+  --texto-muted: #7a6a99;
+  --acento: #ff00ff;
+  --acento-hover: #d100d1;
+  --acento-claro: #00ffff;
+  --peligro: #ff3366;
+  --exito: #00ffaa;
+  --aviso: #ffaa00;
+}
+
+body[data-estilo='cyberpunk'] h1 {
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+  letter-spacing: 0.05em;
+}
+
+body[data-estilo='cyberpunk'] .dash-card,
+body[data-estilo='cyberpunk'] .curso-card {
+  border-color: rgba(255, 0, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.15),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+}
+
+body[data-estilo='cyberpunk'] .btn-primario {
+  background: linear-gradient(135deg, #ff00ff, #00ffff);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+body[data-estilo='cyberpunk'] .navbar a.active {
+  background: linear-gradient(135deg, #ff00ff, #00ffff);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+}
+
+body[data-estilo='cyberpunk'] .app {
+  background-image: linear-gradient(
+    rgba(255, 0, 255, 0.03) 1px,
+    transparent 1px
+  ),
+  linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* =========================================
+   ⚪ ESTILO: MINIMAL
+   ========================================= */
+body[data-estilo='minimal'] {
+  --borde: transparent;
+  --borde-hover: rgba(99, 102, 241, 0.3);
+}
+
+body[data-estilo='minimal'] .dash-card,
+body[data-estilo='minimal'] .curso-card,
+body[data-estilo='minimal'] .rutina-card,
+body[data-estilo='minimal'] .habito-item,
+body[data-estilo='minimal'] .logro-card,
+body[data-estilo='minimal'] .stat-metrica,
+body[data-estilo='minimal'] .stats-card,
+body[data-estilo='minimal'] .config-seccion,
+body[data-estilo='minimal'] .tarea-item {
+  border: 1px solid transparent;
+  background: var(--bg-secundario);
+  box-shadow: none;
+}
+
+body[data-estilo='minimal'] .dash-card:hover,
+body[data-estilo='minimal'] .curso-card:hover,
+body[data-estilo='minimal'] .rutina-card:hover {
+  border-color: var(--acento);
+  box-shadow: 0 4px 20px var(--sombra);
+}
+
+body[data-estilo='minimal'] header {
+  border-bottom: 1px solid transparent;
+}
+
+body[data-estilo='minimal'] .navbar {
+  border-bottom: 1px solid var(--borde);
+}
+
+body[data-estilo='minimal'] .dash-card::before,
+body[data-estilo='minimal'] .curso-card::before,
+body[data-estilo='minimal'] .rutina-card::before,
+body[data-estilo='minimal'] .habito-item::before {
+  display: none;
+}
+
+/* =========================================
+   🕹️ ESTILO: RETRO
+   ========================================= */
+body[data-estilo='retro'] {
+  --bg-primario: #1a0b2e;
+  --bg-secundario: #2d1b4e;
+  --bg-terciario: #3d2668;
+  --bg-hover: #4d3380;
+  --bg-elevado: #2d1b4e;
+  --borde: #6b4ba0;
+  --borde-hover: #8b6bc0;
+  --texto: #ffe15c;
+  --texto-secundario: #ffb84d;
+  --texto-muted: #b08830;
+  --acento: #ff3366;
+  --acento-hover: #e0225a;
+  --acento-claro: #ff6b8b;
+  --exito: #00ff88;
+  --aviso: #ffcc00;
+  --peligro: #ff2244;
+}
+
+body[data-estilo='retro'] * {
+  font-family: 'Courier New', 'Consolas', monospace !important;
+  letter-spacing: 0.02em;
+}
+
+body[data-estilo='retro'] h1,
+body[data-estilo='retro'] h2,
+body[data-estilo='retro'] h3 {
+  text-shadow: 3px 3px 0 #000000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body[data-estilo='retro'] .btn-primario,
+body[data-estilo='retro'] .btn-peligro,
+body[data-estilo='retro'] .btn-iniciar {
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+body[data-estilo='retro'] .btn-primario:hover,
+body[data-estilo='retro'] .btn-peligro:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000000;
+}
+
+body[data-estilo='retro'] .dash-card,
+body[data-estilo='retro'] .curso-card,
+body[data-estilo='retro'] .rutina-card {
+  border: 3px solid var(--borde);
+  box-shadow: 4px 4px 0 #000000;
+}
+
+body[data-estilo='retro'] .dash-card:hover,
+body[data-estilo='retro'] .curso-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000000;
+}
+
+body[data-estilo='retro'] .app {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 225, 92, 0.03) 0px,
+    rgba(255, 225, 92, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* =========================================
+   DASHBOARD CENTRADO EN PANTALLAS GRANDES
+   ========================================= */
+@media (min-width: 1024px) {
+  .dashboard,
+  .tareas-page,
+  .habitos-page,
+  .enfoque-page,
+  .config-page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .cursos-page,
+  .gym-page,
+  .logros-page {
+    max-width: 1100px;
+  }
+
+  .stats-page {
+    max-width: 1200px;
+  }
 }

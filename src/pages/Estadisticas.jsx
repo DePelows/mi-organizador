@@ -27,31 +27,74 @@ ChartJS.register(
   Filler
 )
 
-const COLOR_TEXTO = '#a0a0b0'
-const COLOR_GRID = '#2a2a35'
+// 🎨 Helper: detecta el color del texto según el tema
+const getColores = () => {
+  const esClaro = document.body.getAttribute('data-tema') === 'claro'
+  return {
+    texto: esClaro ? '#666680' : '#a0a0b0',
+    grid: esClaro ? '#e0e0e8' : '#2a2a35',
+    tooltipBg: esClaro ? '#ffffff' : '#1a1a24',
+    tooltipTexto: esClaro ? '#1a1a24' : '#eaeaea',
+  }
+}
 
-const opcionesBase = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      labels: {
-        color: COLOR_TEXTO,
-        font: { size: 12 },
+const getOpcionesBase = () => {
+  const c = getColores()
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: c.texto,
+          font: { size: 12 },
+        },
+      },
+      tooltip: {
+        backgroundColor: c.tooltipBg,
+        titleColor: c.tooltipTexto,
+        bodyColor: c.tooltipTexto,
+        borderColor: c.grid,
+        borderWidth: 1,
       },
     },
-  },
-  scales: {
-    x: {
-      ticks: { color: COLOR_TEXTO },
-      grid: { color: COLOR_GRID },
+    scales: {
+      x: {
+        ticks: { color: c.texto },
+        grid: { color: c.grid },
+      },
+      y: {
+        ticks: { color: c.texto, stepSize: 1 },
+        grid: { color: c.grid },
+        beginAtZero: true,
+      },
     },
-    y: {
-      ticks: { color: COLOR_TEXTO, stepSize: 1 },
-      grid: { color: COLOR_GRID },
-      beginAtZero: true,
+  }
+}
+
+const getOpcionesDoughnut = () => {
+  const c = getColores()
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          color: c.texto,
+          font: { size: 12 },
+          padding: 12,
+        },
+      },
+      tooltip: {
+        backgroundColor: c.tooltipBg,
+        titleColor: c.tooltipTexto,
+        bodyColor: c.tooltipTexto,
+        borderColor: c.grid,
+        borderWidth: 1,
+      },
     },
-  },
+  }
 }
 
 // 🔧 Helper: cuenta actividades de un día
@@ -73,17 +116,13 @@ function contarActividadDia(fecha, { tareas, entrenos, cursos, habitos }) {
   }
 }
 
-// 🔧 Helper: formatea fecha
 function formatearFechaStr(fechaStr) {
   const [y, m, d] = fechaStr.split('-')
-  return new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString(
-    'es',
-    {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    }
-  )
+  return new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString('es', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  })
 }
 
 function Estadisticas() {
@@ -93,7 +132,12 @@ function Estadisticas() {
     habitos,
     entrenos,
     periodoActivo,
+    tema,
+    colorPrincipal,
   } = useApp()
+
+  // 🔑 Key pa' forzar re-render de los gráficos cuando cambia el tema
+  const keyGraficos = `${tema}-${colorPrincipal}`
 
   // === DATOS GENERALES ===
   const totalTareas = tareas.length
@@ -110,7 +154,7 @@ function Estadisticas() {
   const totalHorasEstudio =
     cursos.reduce((acc, c) => acc + c.minutosTotales, 0) / 60
 
-  // === GRÁFICO 1: Últimos 7 días de actividad ===
+  // === GRÁFICO 1: Últimos 7 días ===
   const ultimos7Dias = []
   for (let i = 6; i >= 0; i--) {
     const d = new Date()
@@ -176,33 +220,19 @@ function Estadisticas() {
         data: cursos.length > 0 ? cursos.map((c) => c.pomodoros) : [0],
         backgroundColor:
           cursos.length > 0 ? cursos.map((c) => c.color) : ['#2a2a35'],
-        borderColor: '#1a1a24',
+        borderColor: document.body.getAttribute('data-tema') === 'claro'
+          ? '#ffffff'
+          : '#1a1a24',
         borderWidth: 2,
       },
     ],
   }
 
-  const opcionesDoughnut = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: {
-          color: COLOR_TEXTO,
-          font: { size: 12 },
-          padding: 12,
-        },
-      },
-    },
-  }
-
-  // === GRÁFICO 3: Rachas actuales ===
+  // === GRÁFICO 3: Rachas ===
   const rachasLabels = []
   const rachasValores = []
   const rachasColores = []
 
-  // Helper para racha
   const calcularRachaLocal = (fechas) => {
     if (fechas.length === 0) return 0
     const setFechas = new Set(fechas)
@@ -224,7 +254,6 @@ function Estadisticas() {
     return racha
   }
 
-  // Gym
   if (entrenos.length > 0) {
     const fechasUnicas = [...new Set(entrenos.map((e) => e.fecha))]
     const rachaGym = calcularRachaLocal(fechasUnicas)
@@ -235,7 +264,6 @@ function Estadisticas() {
     }
   }
 
-  // Cursos
   cursos.forEach((c) => {
     const racha = calcularRachaLocal(c.fechas)
     if (racha > 0) {
@@ -245,7 +273,6 @@ function Estadisticas() {
     }
   })
 
-  // Hábitos
   habitos.forEach((h) => {
     if (h.racha > 0) {
       rachasLabels.push(`${h.emoji} ${h.nombre}`)
@@ -266,13 +293,11 @@ function Estadisticas() {
     ],
   }
 
-  // === MAPA DE CALOR: últimos 91 días (13 semanas) ===
+  // === MAPA DE CALOR ===
   const mapaCalor = []
   const hoyDate = new Date()
   hoyDate.setHours(0, 0, 0, 0)
-
-  // Ajustamos para que empiece en lunes
-  const diaSemanaHoy = (hoyDate.getDay() + 6) % 7 // lunes=0
+  const diaSemanaHoy = (hoyDate.getDay() + 6) % 7
   const diasDesdeUltimoLunes = diaSemanaHoy
 
   for (let i = 90 + diasDesdeUltimoLunes; i >= 0; i--) {
@@ -298,7 +323,6 @@ function Estadisticas() {
     })
   }
 
-  // Agrupar por semana (columnas)
   const semanas = []
   let semanaActual = []
   mapaCalor.forEach((dia, idx) => {
@@ -309,7 +333,6 @@ function Estadisticas() {
     }
   })
 
-  // Nivel de color según actividad
   const nivelColor = (total) => {
     if (total === 0) return 0
     if (total === 1) return 1
@@ -318,7 +341,6 @@ function Estadisticas() {
     return 4
   }
 
-  // Meses pa' etiquetas
   const mesesLabels = []
   let ultimoMes = null
   semanas.forEach((sem) => {
@@ -335,10 +357,9 @@ function Estadisticas() {
     }
   })
 
-  // === COMPARATIVA SEMANAL (últimas 4 semanas) ===
+  // === COMPARATIVA 4 SEMANAS ===
   const semanasData = []
   for (let s = 3; s >= 0; s--) {
-    // s=0: semana actual, s=1: anterior, etc.
     let totalTareas = 0
     let totalEntrenos = 0
     let totalEstudio = 0
@@ -376,8 +397,7 @@ function Estadisticas() {
     })
   }
 
-  // === RÉCORDS PERSONALES ===
-  // Mejor día (más actividades)
+  // === RÉCORDS ===
   let mejorDia = null
   mapaCalor.forEach((dia) => {
     if (!mejorDia || dia.total > mejorDia.total) {
@@ -385,7 +405,6 @@ function Estadisticas() {
     }
   })
 
-  // Racha más larga de gym (histórica)
   let rachaMaxGym = 0
   if (entrenos.length > 0) {
     const fechasOrdenadas = [...new Set(entrenos.map((e) => e.fecha))].sort()
@@ -405,19 +424,16 @@ function Estadisticas() {
     rachaMaxGym = rachaMax
   }
 
-  // Curso más estudiado
   const cursoTop =
     cursos.length > 0
       ? [...cursos].sort((a, b) => b.pomodoros - a.pomodoros)[0]
       : null
 
-  // Semana más productiva
   const semanaTop =
     semanasData.length > 0
       ? [...semanasData].sort((a, b) => b.total - a.total)[0]
       : null
 
-  // Total de días activos
   const diasActivos = mapaCalor.filter((d) => d.total > 0).length
 
   const sinDatos =
@@ -445,7 +461,6 @@ function Estadisticas() {
         </div>
       ) : (
         <>
-          {/* Métricas rápidas */}
           <div className="stats-metricas">
             <div className="stat-metrica">
               <span className="sm-valor">{totalTareas}</span>
@@ -473,7 +488,7 @@ function Estadisticas() {
             </div>
           </div>
 
-          {/* 🆕 MAPA DE CALOR */}
+          {/* Mapa de calor */}
           <div className="stats-card">
             <h3 className="stats-card-titulo">
               🔥 Mapa de calor · últimos 3 meses
@@ -525,7 +540,7 @@ function Estadisticas() {
             </div>
           </div>
 
-          {/* 🆕 COMPARATIVA ÚLTIMAS 4 SEMANAS */}
+          {/* Comparativa */}
           <div className="stats-card">
             <h3 className="stats-card-titulo">
               📅 Comparativa · últimas 4 semanas
@@ -595,7 +610,7 @@ function Estadisticas() {
             )}
           </div>
 
-          {/* 🆕 RÉCORDS PERSONALES */}
+          {/* Récords */}
           <div className="stats-card">
             <h3 className="stats-card-titulo">🏆 Récords personales</h3>
             <div className="records-grid">
@@ -666,7 +681,7 @@ function Estadisticas() {
                     <span className="record-valor">{totalPomodoros}</span>
                     <span className="record-label">Pomodoros totales</span>
                     <span className="record-fecha">
-                      {(totalPomodoros * 25) / 60 > 0
+                      {totalPomodoros * 25 > 0
                         ? `${((totalPomodoros * 25) / 60).toFixed(1)}h`
                         : ''}
                     </span>
@@ -676,11 +691,15 @@ function Estadisticas() {
             </div>
           </div>
 
-          {/* Gráfico 1: Actividad últimos 7 días */}
+          {/* Gráfico 7 días */}
           <div className="stats-card">
             <h3 className="stats-card-titulo">📈 Actividad últimos 7 días</h3>
             <div className="chart-wrapper">
-              <Line data={dataActividad} options={opcionesBase} />
+              <Line
+                key={keyGraficos}
+                data={dataActividad}
+                options={getOpcionesBase()}
+              />
             </div>
           </div>
 
@@ -690,7 +709,11 @@ function Estadisticas() {
               <div className="stats-card">
                 <h3 className="stats-card-titulo">🍅 Pomodoros por curso</h3>
                 <div className="chart-wrapper-doughnut">
-                  <Doughnut data={dataPomodoros} options={opcionesDoughnut} />
+                  <Doughnut
+                    key={keyGraficos}
+                    data={dataPomodoros}
+                    options={getOpcionesDoughnut()}
+                  />
                 </div>
               </div>
             )}
@@ -700,9 +723,10 @@ function Estadisticas() {
                 <h3 className="stats-card-titulo">🔥 Rachas actuales</h3>
                 <div className="chart-wrapper-doughnut">
                   <Bar
+                    key={keyGraficos}
                     data={dataRachas}
                     options={{
-                      ...opcionesBase,
+                      ...getOpcionesBase(),
                       indexAxis: 'y',
                       plugins: {
                         legend: { display: false },

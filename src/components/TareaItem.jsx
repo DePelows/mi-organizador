@@ -25,7 +25,6 @@ function TareaItem({ tarea, onToggle, onEliminar }) {
   const subtareas = tarea.subtareas || []
   const completadasSub = subtareas.filter((s) => s.completada).length
 
-  // Verificar si la fecha límite venció
   const hoy = fechaHoy()
   const vencida =
     tarea.fechaLimite && !tarea.completada && tarea.fechaLimite < hoy
@@ -60,6 +59,15 @@ function TareaItem({ tarea, onToggle, onEliminar }) {
     const [y, m, d] = fechaStr.split('-')
     const date = new Date(Number(y), Number(m) - 1, Number(d))
     return date.toLocaleDateString('es', { day: 'numeric', month: 'short' })
+  }
+
+  const getRecurrenciaTexto = () => {
+    if (!tarea.recurrencia) return null
+    if (tarea.recurrencia === 'diaria') return 'Diaria'
+    if (tarea.recurrencia === 'semanal') return 'Semanal'
+    if (tarea.recurrencia === 'mensual') return 'Mensual'
+    if (tarea.recurrencia === 'dias-semana') return 'Días específicos'
+    return null
   }
 
   if (editando) {
@@ -131,6 +139,11 @@ function TareaItem({ tarea, onToggle, onEliminar }) {
                   📅 {formatearFecha(tarea.fechaLimite)}
                   {vencida && ' · vencida'}
                   {esHoy && ' · hoy'}
+                </span>
+              )}
+              {tarea.recurrencia && (
+                <span className="tarea-recurrencia" title="Se repite">
+                  🔁 {getRecurrenciaTexto()}
                 </span>
               )}
               {subtareas.length > 0 && (

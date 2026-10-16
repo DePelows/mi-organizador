@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useApp, fechaHoy } from '../context/AppContext'
 import { COLORES_DISPONIBLES } from '../utils/colores'
+import { ESTILOS_DISPONIBLES } from '../utils/estilos'
 
 function Config() {
   const {
@@ -20,7 +21,11 @@ function Config() {
     notificacionesActivas,
     toggleNotificaciones,
     colorPrincipal,
-  setColorPrincipal,
+    setColorPrincipal,
+    calcularXPRetroactivo,
+    reclamarXPRetroactivo,
+    estiloVisual,
+    setEstiloVisual,
   } = useApp()
 
   const fileInputRef = useRef(null)
@@ -127,6 +132,40 @@ function Config() {
         </div>
       </div>
       
+      {/* 🎯 XP Retroactivo */}
+      <div className="config-seccion">
+        <h3 className="config-seccion-titulo">⚡ XP Retroactivo</h3>
+        <p className="config-descripcion">
+          Calculá el XP de todo lo que ya hiciste antes de tener el sistema de niveles.
+          Solo podés reclamarlo una vez.
+        </p>
+
+        <div className="config-xp-preview">
+          <div className="config-xp-item">
+            <span className="config-xp-label">XP actual</span>
+            <span className="config-xp-valor">{xpTotal}</span>
+          </div>
+          <div className="config-xp-item">
+            <span className="config-xp-label">XP pendiente</span>
+            <span className="config-xp-valor">
+              {Math.max(0, calcularXPRetroactivo() - xpTotal)}
+            </span>
+          </div>
+        </div>
+
+        <button
+          className="btn-primario"
+          onClick={reclamarXPRetroactivo}
+          disabled={calcularXPRetroactivo() <= xpTotal}
+          style={{
+            opacity: calcularXPRetroactivo() <= xpTotal ? 0.5 : 1,
+            cursor: calcularXPRetroactivo() <= xpTotal ? 'not-allowed' : 'pointer',
+          }}
+        >
+          ⚡ Reclamar XP retroactivo
+        </button>
+      </div>
+
       <div className="config-preferencia config-preferencia-colores">
         <div className="config-pref-info">
           <span className="config-pref-titulo">🎨 Color principal</span>
@@ -146,6 +185,27 @@ function Config() {
               style={{ background: c.primario }}
             >
               {colorPrincipal === c.id && '✓'}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="config-preferencia config-preferencia-colores">
+        <div className="config-pref-info">
+          <span className="config-pref-titulo">🎭 Estilo visual</span>
+          <span className="config-pref-desc">
+            Cambiá el look & feel completo de la app
+          </span>
+        </div>
+        <div className="estilos-visuales-grid">
+          {ESTILOS_DISPONIBLES.map((e) => (
+            <button
+              key={e.id}
+              className={`estilo-btn ${estiloVisual === e.id ? 'activo' : ''}`}
+              onClick={() => setEstiloVisual(e.id)}
+            >
+              <span className="estilo-emoji">{e.emoji}</span>
+              <span className="estilo-nombre">{e.nombre}</span>
             </button>
           ))}
         </div>
